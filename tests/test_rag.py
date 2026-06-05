@@ -23,7 +23,9 @@ _DOC = (
 
 
 def _index() -> DocumentIndex:
-    settings = Settings(persist=False, embedder="hashing", hashing_dim=256, chunk_size=80, chunk_overlap=20)
+    settings = Settings(
+        persist=False, embedder="hashing", hashing_dim=256, chunk_size=80, chunk_overlap=20
+    )
     emb = HashingEmbedder(dim=256)
     return DocumentIndex(emb, NumpyVectorStore(dim=256), settings)
 
@@ -65,10 +67,17 @@ def test_empty_index_returns_message():
 
 def test_rag_end_to_end_through_graph():
     settings = Settings(
-        persist=False, embedder="hashing", hashing_dim=256,
-        reflection_every_k_turns=0, summary_token_budget=100_000,
-        enable_tools=True, enabled_tools=["retrieve_documents"],
-        prefer_native_tool_calls=False, max_tool_iters=4, chunk_size=80, chunk_overlap=20,
+        persist=False,
+        embedder="hashing",
+        hashing_dim=256,
+        reflection_every_k_turns=0,
+        summary_token_budget=100_000,
+        enable_tools=True,
+        enabled_tools=["retrieve_documents"],
+        prefer_native_tool_calls=False,
+        max_tool_iters=4,
+        chunk_size=80,
+        chunk_overlap=20,
     )
     model = ScriptedModel(
         [

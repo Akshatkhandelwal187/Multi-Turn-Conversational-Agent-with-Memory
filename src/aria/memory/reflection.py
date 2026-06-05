@@ -22,7 +22,7 @@ _REFLECT_PROMPT = (
     "Below are recent memories about the user. Infer up to {n} high-level insights "
     "about their interests, goals, expertise, or communication style. Each insight "
     "should be a general statement not stated verbatim in any single memory. "
-    'Return a JSON array of short strings.\n\nMemories:\n{memories}\n\nInsights (JSON):'
+    "Return a JSON array of short strings.\n\nMemories:\n{memories}\n\nInsights (JSON):"
 )
 
 
@@ -42,9 +42,7 @@ class Reflection:
             return []
         rendered = "\n".join(f"- {m.text}" for m in memories)
         try:
-            reply = self.model.invoke(
-                _REFLECT_PROMPT.format(n=max_insights, memories=rendered)
-            )
+            reply = self.model.invoke(_REFLECT_PROMPT.format(n=max_insights, memories=rendered))
             content = message_text(reply)
         except Exception:  # pragma: no cover - defensive
             return []

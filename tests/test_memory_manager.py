@@ -47,8 +47,11 @@ def test_search_finds_written_memory():
 
 def test_maybe_summarize_triggers_over_budget():
     settings = Settings(
-        persist=False, embedder="hashing", hashing_dim=256,
-        summary_token_budget=5, summary_keep_last_messages=2,
+        persist=False,
+        embedder="hashing",
+        hashing_dim=256,
+        summary_token_budget=5,
+        summary_keep_last_messages=2,
     )
     mgr = build_memory_manager(settings=settings, model=None)
     long_history = [HumanMessage(content="a fairly long message about my life " * 3)] * 6
@@ -58,7 +61,9 @@ def test_maybe_summarize_triggers_over_budget():
 
 
 def test_reflection_stored_as_memory(scripted_model):
-    settings = Settings(persist=False, embedder="hashing", hashing_dim=256, reflection_every_k_turns=1)
+    settings = Settings(
+        persist=False, embedder="hashing", hashing_dim=256, reflection_every_k_turns=1
+    )
     model = scripted_model(['["The user cares about privacy"]'])
     mgr = build_memory_manager(settings=settings, model=model)
     mgr.write("Please never share my data", "Understood.")

@@ -86,6 +86,10 @@ line-length = 100
 target-version = "py311"
 src = ["src", "tests"]
 
+[tool.ruff.format]
+# Preserve the original backward-compat test verbatim.
+exclude = ["tests/test_agent.py"]
+
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "C4", "SIM", "RUF"]
 ignore = [

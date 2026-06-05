@@ -47,9 +47,7 @@ def test_two_turn_recall():
     )
     cfg = _config("t1")
     agent.invoke({"messages": [HumanMessage(content="My favorite color is teal.")]}, cfg)
-    result = agent.invoke(
-        {"messages": [HumanMessage(content="What is my favorite color?")]}, cfg
-    )
+    result = agent.invoke({"messages": [HumanMessage(content="What is my favorite color?")]}, cfg)
     assert "teal" in result["messages"][-1].content.lower()
 
 

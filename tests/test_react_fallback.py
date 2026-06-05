@@ -35,9 +35,19 @@ def test_structured_fallback_parses_action_then_final():
 
 def test_native_tool_calls_path():
     model = ScriptedModel(
-        [{"content": "", "tool_calls": [
-            {"name": "calculator", "args": {"expression": "2+2"}, "id": "1", "type": "tool_call"}
-        ]}]
+        [
+            {
+                "content": "",
+                "tool_calls": [
+                    {
+                        "name": "calculator",
+                        "args": {"expression": "2+2"},
+                        "id": "1",
+                        "type": "tool_call",
+                    }
+                ],
+            }
+        ]
     )
     agent = ReActAgent(model, [calculator], _settings(prefer_native_tool_calls=True))
     assert agent.use_native is True  # ScriptedModel.bind_tools succeeded
@@ -68,10 +78,15 @@ def test_force_final_skips_tools():
 
 def test_graph_executes_a_tool_end_to_end():
     settings = Settings(
-        persist=False, embedder="hashing", hashing_dim=256,
-        reflection_every_k_turns=0, summary_token_budget=100_000,
-        enable_tools=True, enabled_tools=["calculator"],
-        prefer_native_tool_calls=False, max_tool_iters=4,
+        persist=False,
+        embedder="hashing",
+        hashing_dim=256,
+        reflection_every_k_turns=0,
+        summary_token_budget=100_000,
+        enable_tools=True,
+        enabled_tools=["calculator"],
+        prefer_native_tool_calls=False,
+        max_tool_iters=4,
     )
     model = ScriptedModel(
         ['Action: {"tool": "calculator", "args": {"expression": "21*2"}}', "Final: It is 42."]

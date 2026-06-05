@@ -68,9 +68,7 @@ class Summarizer:
     def _extractive_fallback(previous: str, transcript: str) -> str:
         """Deterministic fallback: keep the previous summary + the user's statements."""
         user_lines = [
-            line.split(": ", 1)[1]
-            for line in transcript.splitlines()
-            if line.startswith("User: ")
+            line.split(": ", 1)[1] for line in transcript.splitlines() if line.startswith("User: ")
         ]
         merged = [s for s in [previous.strip(), *user_lines] if s]
         summary = " ".join(merged)

@@ -37,9 +37,7 @@ class SentenceTransformerEmbedder:
         if not texts:
             return np.zeros((0, self.dim), dtype=np.float32)
         try:
-            vectors = self._model.encode(
-                texts, normalize_embeddings=True, convert_to_numpy=True
-            )
+            vectors = self._model.encode(texts, normalize_embeddings=True, convert_to_numpy=True)
         except Exception as exc:  # pragma: no cover - runtime/model errors
             raise EmbeddingError(f"sentence-transformers encode failed: {exc}") from exc
         return np.asarray(vectors, dtype=np.float32)

@@ -14,8 +14,11 @@ from aria.eval.scorer import contains_needle, token_f1
 
 def _settings() -> Settings:
     return Settings(
-        persist=False, embedder="hashing", hashing_dim=256,
-        working_window_messages=6, episodic_top_k=5,
+        persist=False,
+        embedder="hashing",
+        hashing_dim=256,
+        working_window_messages=6,
+        episodic_top_k=5,
     )
 
 

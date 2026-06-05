@@ -11,9 +11,7 @@ if TYPE_CHECKING:
     from ..config import Settings
 
 
-def build_vector_store(
-    dim: int, namespace: str, settings: Settings | None = None
-) -> VectorStore:
+def build_vector_store(dim: int, namespace: str, settings: Settings | None = None) -> VectorStore:
     """Construct a vector store for a named collection (e.g. ``"episodic"``, ``"docs"``).
 
     Uses on-disk persistence under ``<data_dir>/vectors/<namespace>`` when

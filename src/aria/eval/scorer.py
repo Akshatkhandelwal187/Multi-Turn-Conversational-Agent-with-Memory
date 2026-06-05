@@ -40,7 +40,7 @@ class LLMJudge:
 
     _PROMPT = (
         "You are grading a memory test. Question: {question}\nExpected fact: {expected}\n"
-        'Answer: {answer}\nDoes the answer correctly convey the expected fact? '
+        "Answer: {answer}\nDoes the answer correctly convey the expected fact? "
         'Reply with JSON: {{"correct": true|false}}.'
     )
 

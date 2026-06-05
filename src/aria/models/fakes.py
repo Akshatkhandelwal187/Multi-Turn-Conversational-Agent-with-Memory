@@ -50,6 +50,27 @@ class RecordingModel:
         return self
 
 
+class FlakyModel:
+    """Raises on the first ``fail_times`` calls, then returns a fixed reply.
+
+    Used to test the retry/backoff wrapper deterministically.
+    """
+
+    def __init__(self, fail_times: int = 2, reply: str = "ok") -> None:
+        self.fail_times = fail_times
+        self.reply = reply
+        self.calls = 0
+
+    def invoke(self, messages: Any, config: Any = None, **kwargs: Any) -> AIMessage:
+        self.calls += 1
+        if self.calls <= self.fail_times:
+            raise RuntimeError("transient failure")
+        return AIMessage(content=self.reply)
+
+    def bind_tools(self, tools: Any, **kwargs: Any) -> FlakyModel:
+        return self
+
+
 class ScriptedModel:
     """A chat model that returns pre-scripted responses in order.
 
@@ -106,4 +127,4 @@ class ScriptedModel:
         yield self.invoke(messages, config, **kwargs)
 
 
-__all__ = ["RecordingModel", "Response", "ScriptedModel"]
+__all__ = ["FlakyModel", "RecordingModel", "Response", "ScriptedModel"]

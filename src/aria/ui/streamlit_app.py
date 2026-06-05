@@ -135,8 +135,7 @@ def _sidebar(agent: Any, settings: Settings, registry: ConversationRegistry) -> 
 def _memory_panel(agent: Any) -> None:
     st.subheader("Memory")
     st.caption(
-        f"Episodic: {len(agent.manager.episodic)} · "
-        f"Docs: {len(agent.manager.document_index)}"
+        f"Episodic: {len(agent.manager.episodic)} · Docs: {len(agent.manager.document_index)}"
     )
     facts = agent.manager.semantic.facts()
     with st.expander(f"User profile ({len(facts)} facts)"):

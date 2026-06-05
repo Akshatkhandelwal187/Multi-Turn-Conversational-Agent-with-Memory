@@ -28,8 +28,11 @@ _PATTERNS: tuple[tuple[re.Pattern, str], ...] = (
     (re.compile(r"\bi'?m called ([A-Z][a-zA-Z'-]+)", re.I), "name"),
     (re.compile(r"\bmy favou?rite (\w+) is ([\w\s+#.\-]+?)(?:[.!?,]|$)", re.I), "favorite_{0}"),
     (
-        re.compile(r"\bi(?:'m| am)? (?:building|working on|developing) (?:a |an )?"
-                   r"([\w\s+#.\-]+?)(?:[.!?,]|$)", re.I),
+        re.compile(
+            r"\bi(?:'m| am)? (?:building|working on|developing) (?:a |an )?"
+            r"([\w\s+#.\-]+?)(?:[.!?,]|$)",
+            re.I,
+        ),
         "project",
     ),
     (re.compile(r"\bi(?:'m| am) (?:a|an) ([\w\s\-]+?)(?:[.!?,]|$)", re.I), "role"),

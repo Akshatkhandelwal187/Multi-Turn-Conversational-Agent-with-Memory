@@ -1,0 +1,14 @@
+services:
+  aria:
+    build: .
+    image: aria-memory-agent
+    ports:
+      - "8501:8501"
+    environment:
+      # Provide your token here or via a .env file (see .env.example).
+      HUGGINGFACEHUB_API_TOKEN: ${HUGGINGFACEHUB_API_TOKEN:-}
+      ARIA_PERSIST: "true"
+      ARIA_DATA_DIR: /data
+    volumes:
+      # Durable memory (SQLite + vector store) survives container restarts.
+      - ./data:/data

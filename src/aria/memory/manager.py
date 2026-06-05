@@ -97,9 +97,7 @@ class MemoryManager:
             parts.append("Summary of earlier conversation:\n" + summary)
         if retrieved:
             lines = "\n".join(f"- {r.text}" for r in retrieved)
-            parts.append(
-                "Relevant things you remember (may help answer the user):\n" + lines
-            )
+            parts.append("Relevant things you remember (may help answer the user):\n" + lines)
         return "\n\n".join(parts)
 
     # -- write path ----------------------------------------------------------
@@ -123,9 +121,7 @@ class MemoryManager:
             self.semantic.store.add_reflection(record.id, insight)
         return insights
 
-    def maybe_summarize(
-        self, messages: list[Any], summary: str
-    ) -> tuple[str, list[Any], bool]:
+    def maybe_summarize(self, messages: list[Any], summary: str) -> tuple[str, list[Any], bool]:
         if not self.summarizer.needs_summary(messages, summary):
             return summary, messages, False
         new_summary, kept = self.summarizer.summarize(messages, summary)

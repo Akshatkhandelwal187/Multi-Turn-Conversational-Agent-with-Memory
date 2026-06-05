@@ -131,9 +131,7 @@ def build_cognitive_agent(
             react_agent = ReActAgent(model, tools, settings)
             tool_node = ToolNode(tools)
 
-    nodes = CognitiveNodes(
-        model=model, manager=manager, settings=settings, react_agent=react_agent
-    )
+    nodes = CognitiveNodes(model=model, manager=manager, settings=settings, react_agent=react_agent)
     graph = _assemble_graph(nodes, tool_node=tool_node).compile(checkpointer=checkpointer)
     return AriaAgent(graph=graph, manager=manager, settings=settings, model=model)
 

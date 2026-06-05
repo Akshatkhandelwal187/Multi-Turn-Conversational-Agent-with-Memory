@@ -1,0 +1,5 @@
+strategy,recall,avg_context_tokens,avg_latency_ms,probes
+no_memory,0.0000,92.33,0.0008,24
+sliding_window,0.0000,151.71,0.0049,24
+buffer,1.0000,355.33,0.0120,24
+cognitive,0.9583,208.54,0.2361,24

@@ -1,6 +1,23 @@
-streamlit>=1.40.0
-langgraph>=0.2.50
-langchain-core>=0.3.0
-langchain-huggingface>=0.1.2
-python-dotenv>=1.0.0
-pytest>=8.0.0
+# Full runtime for running the app directly (e.g. Streamlit Cloud):
+#   pip install -r requirements.txt
+# This includes sentence-transformers (which pulls a CPU build of torch) for real
+# semantic embeddings. For a lighter, fully-offline install use the deterministic
+# hashing embedder (ARIA_EMBEDDER=hashing) and `pip install -e .` instead.
+# CI installs the `dev` extra (no torch) — see .github/workflows/ci.yml.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+langgraph>=1.2,<2
+langgraph-checkpoint-sqlite>=3.1,<4
+langchain-core>=1.4,<2
+langchain-huggingface>=1.2,<2
+pydantic>=2.7,<3
+pydantic-settings>=2.3,<3
+tenacity>=8.3,<10
+structlog>=24.1
+python-dotenv>=1.0
+numpy>=1.26
+tiktoken>=0.7
+streamlit>=1.40
+pypdf>=4.2
+matplotlib>=3.8
+sentence-transformers>=3.0

@@ -7,21 +7,19 @@ the offline tests, which inject fakes) never requires it or a network connection
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Any
 
 from ..config import Settings, get_settings
-
-if TYPE_CHECKING:
-    from langchain_core.language_models import BaseChatModel
+from .resilience import RetryingChatModel
 
 
-def build_model(settings: Settings | None = None) -> BaseChatModel:
+def build_model(settings: Settings | None = None) -> Any:
     """Create the Hugging Face-backed chat model from configuration.
 
     Reads the model id, token, provider, temperature and ``max_new_tokens`` from
-    :class:`~aria.config.Settings`. The returned model is a ``ChatHuggingFace`` that
-    speaks the standard LangChain message interface (and supports ``bind_tools`` /
-    streaming).
+    :class:`~aria.config.Settings`. Returns a ``ChatHuggingFace`` (standard LangChain
+    message interface, ``bind_tools`` / streaming) wrapped in
+    :class:`~aria.models.resilience.RetryingChatModel` for backoff + typed errors.
     """
     settings = settings or get_settings()
 
@@ -36,7 +34,11 @@ def build_model(settings: Settings | None = None) -> BaseChatModel:
         provider=settings.hf_provider,
         huggingfacehub_api_token=settings.hf_token,
     )
-    return ChatHuggingFace(llm=llm)
+    return RetryingChatModel(
+        ChatHuggingFace(llm=llm),
+        max_retries=settings.request_max_retries,
+        base_delay=settings.request_retry_base_delay,
+    )
 
 
 __all__ = ["build_model"]
