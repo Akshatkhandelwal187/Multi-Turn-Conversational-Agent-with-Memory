@@ -6,9 +6,26 @@
 __pycache__/
 *.py[cod]
 *.egg-info/
+build/
+dist/
 .venv/
 venv/
 .pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Aria runtime data (durable memory, checkpoints, vector store) and eval output
+data/
+eval_reports/
+*.sqlite3
 
 # OS / editor
 .DS_Store
+.idea/
+.vscode/
