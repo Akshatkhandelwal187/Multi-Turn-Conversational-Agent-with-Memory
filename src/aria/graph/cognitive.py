@@ -117,15 +117,23 @@ def build_cognitive_agent(
     if checkpointer is None:
         checkpointer = make_checkpointer(settings)
 
-    nodes = CognitiveNodes(model=model, manager=manager, settings=settings)
-
     tool_node = None
+    react_agent = None
     want_tools = settings.enable_tools if enable_tools is None else enable_tools
     if want_tools:
-        from ..tools import build_tool_node
+        from langgraph.prebuilt import ToolNode
 
-        tool_node = build_tool_node(manager, model, settings)
+        from ..tools import build_tools
+        from .react import ReActAgent
 
+        tools = build_tools(manager, model, settings)
+        if tools:
+            react_agent = ReActAgent(model, tools, settings)
+            tool_node = ToolNode(tools)
+
+    nodes = CognitiveNodes(
+        model=model, manager=manager, settings=settings, react_agent=react_agent
+    )
     graph = _assemble_graph(nodes, tool_node=tool_node).compile(checkpointer=checkpointer)
     return AriaAgent(graph=graph, manager=manager, settings=settings, model=model)
 
