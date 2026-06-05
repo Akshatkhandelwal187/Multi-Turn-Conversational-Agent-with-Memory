@@ -127,7 +127,8 @@ class MemoryManager:
         if not self.summarizer.needs_summary(messages, summary):
             return summary, messages, False
         new_summary, kept = self.summarizer.summarize(messages, summary)
-        return new_summary, kept, True
+        did = len(kept) < len(messages)
+        return new_summary, kept, did
 
     # -- tool / UI access ----------------------------------------------------
     def search(self, query: str, k: int = 5) -> list[MemoryRecord]:

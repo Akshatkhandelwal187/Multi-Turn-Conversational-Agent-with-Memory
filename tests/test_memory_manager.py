@@ -46,12 +46,15 @@ def test_search_finds_written_memory():
 
 
 def test_maybe_summarize_triggers_over_budget():
-    settings = Settings(persist=False, embedder="hashing", hashing_dim=256, summary_token_budget=5)
+    settings = Settings(
+        persist=False, embedder="hashing", hashing_dim=256,
+        summary_token_budget=5, summary_keep_last_messages=2,
+    )
     mgr = build_memory_manager(settings=settings, model=None)
     long_history = [HumanMessage(content="a fairly long message about my life " * 3)] * 6
     _summary, kept, did = mgr.maybe_summarize(long_history, "")
     assert did is True
-    assert len(kept) <= len(long_history)
+    assert len(kept) == 2
 
 
 def test_reflection_stored_as_memory(scripted_model):
