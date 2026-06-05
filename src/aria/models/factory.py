@@ -27,7 +27,8 @@ def build_model(settings: Settings | None = None) -> BaseChatModel:
 
     from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 
-    llm = HuggingFaceEndpoint(
+    # `repo_id` is the runtime-correct argument; the type stub over-requires `model`.
+    llm = HuggingFaceEndpoint(  # type: ignore[call-arg]
         repo_id=settings.hf_model,
         task="text-generation",
         max_new_tokens=settings.max_new_tokens,
