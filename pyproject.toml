@@ -1,0 +1,133 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aria-memory-agent"
+version = "1.0.0"
+description = "Aria — a cognitively-inspired, tool-using multi-turn conversational agent with a layered memory architecture, document RAG, and an empirical evaluation harness."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Akshat Khandelwal" }]
+keywords = [
+    "llm",
+    "agent",
+    "memory",
+    "langgraph",
+    "rag",
+    "conversational-ai",
+    "generative-agents",
+]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Core runtime. Deliberately excludes torch / sentence-transformers: the default
+# embedder is the dependency-light deterministic HashingEmbedder, so the package
+# installs and the test-suite runs with no heavyweight ML stack and no network.
+# Install the `embeddings` extra to enable real semantic (sentence-transformers)
+# embeddings at runtime.
+dependencies = [
+    "langgraph>=1.2,<2",
+    "langgraph-checkpoint-sqlite>=3.1,<4",
+    "langchain-core>=1.4,<2",
+    "langchain-huggingface>=1.2,<2",
+    "pydantic>=2.7,<3",
+    "pydantic-settings>=2.3,<3",
+    "tenacity>=8.3,<10",
+    "structlog>=24.1",
+    "python-dotenv>=1.0",
+    "numpy>=1.26",
+    "tiktoken>=0.7",
+]
+
+[project.optional-dependencies]
+# Real semantic embeddings (pulls torch — heavy). Not needed for tests/CI.
+embeddings = ["sentence-transformers>=3.0"]
+# Optional approximate-NN backend; the numpy cosine store is the default.
+faiss = ["faiss-cpu>=1.8"]
+# Web UI.
+ui = ["streamlit>=1.40"]
+# Document RAG loaders (PDF).
+rag = ["pypdf>=4.2"]
+# Charts in the evaluation report (degrades gracefully if absent).
+viz = ["matplotlib>=3.8"]
+# Everything an end-user needs to actually run the app locally.
+app = ["aria-memory-agent[embeddings,ui,rag,viz]"]
+# Dev / CI toolchain. Excludes torch so CI stays fast and fully offline.
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.6",
+    "mypy>=1.10",
+    "pre-commit>=3.7",
+    "streamlit>=1.40",
+    "pypdf>=4.2",
+]
+
+[project.scripts]
+aria-eval = "aria.eval.runner:main"
+
+[project.urls]
+Homepage = "https://github.com/Akshatkhandelwal187/Multi-Turn-Conversational-Agent-with-Memory"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aria"]
+
+# ----------------------------------------------------------------------------
+# Tooling configuration
+# ----------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.format]
+# Preserve the original backward-compat test verbatim.
+exclude = ["tests/test_agent.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM", "RUF"]
+ignore = [
+    "B008", # function calls in argument defaults — common for FastAPI/typer-style code
+    "SIM105",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["E501"]
+# The original test is preserved byte-for-byte as the backward-compat contract.
+"tests/test_agent.py" = ["E402", "RUF100", "I001"]
+# The UI legitimately uses emoji in user-facing strings.
+"src/aria/ui/streamlit_app.py" = ["RUF001"]
+
+[tool.mypy]
+python_version = "3.11"
+packages = ["aria"]
+mypy_path = "src"
+ignore_missing_imports = true
+warn_unused_ignores = false
+warn_redundant_casts = true
+disallow_untyped_defs = false
+check_untyped_defs = true
+no_implicit_optional = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "live: tests that call the real Hugging Face Inference API (require HUGGINGFACEHUB_API_TOKEN)",
+]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["aria"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:", "raise NotImplementedError"]
