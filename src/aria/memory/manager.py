@@ -60,6 +60,7 @@ class MemoryManager:
         importance: ImportanceScorer,
         settings: Settings,
         persona: str,
+        document_index: Any = None,
     ) -> None:
         self.embedder = embedder
         self.episodic = episodic
@@ -70,6 +71,7 @@ class MemoryManager:
         self.importance = importance
         self.settings = settings
         self.persona = persona
+        self.document_index = document_index  # RAG over uploaded docs (optional)
         self.use_llm_memory = False  # graph may flip this on when a real model is present
 
     # -- read path -----------------------------------------------------------
@@ -139,6 +141,8 @@ class MemoryManager:
 
     def persist(self) -> None:
         self.episodic.store.persist()
+        if self.document_index is not None:
+            self.document_index.persist()
 
 
 __all__ = ["AssembledContext", "MemoryManager", "WriteResult"]

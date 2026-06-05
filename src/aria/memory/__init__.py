@@ -39,6 +39,7 @@ def build_memory_manager(
     """
     from ..config import get_settings
     from ..embeddings import build_embedder
+    from ..rag.index import DocumentIndex
     from ..vectorstore import build_vector_store
 
     settings = settings or get_settings()
@@ -50,6 +51,9 @@ def build_memory_manager(
     sqlite_store = SqliteMemoryStore(settings.sqlite_path if settings.persist else None)
     semantic = SemanticMemory(store=sqlite_store, model=model)
 
+    doc_store = build_vector_store(dim=embedder.dim, namespace="docs", settings=settings)
+    document_index = DocumentIndex(embedder=embedder, store=doc_store, settings=settings)
+
     manager = MemoryManager(
         embedder=embedder,
         episodic=episodic,
@@ -60,6 +64,7 @@ def build_memory_manager(
         importance=ImportanceScorer(model),
         settings=settings,
         persona=settings.persona,
+        document_index=document_index,
     )
     manager.use_llm_memory = model is not None
     return manager
