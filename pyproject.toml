@@ -97,6 +97,8 @@ ignore = [
 "tests/**" = ["E501"]
 # The original test is preserved byte-for-byte as the backward-compat contract.
 "tests/test_agent.py" = ["E402", "RUF100", "I001"]
+# The UI legitimately uses emoji in user-facing strings.
+"src/aria/ui/streamlit_app.py" = ["RUF001"]
 
 [tool.mypy]
 python_version = "3.11"

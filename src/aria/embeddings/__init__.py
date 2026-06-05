@@ -21,9 +21,16 @@ def build_embedder(settings: Settings | None = None) -> Embedder:
 
     settings = settings or get_settings()
     if settings.embedder == "sentence_transformer":
-        from .sentence_transformer import SentenceTransformerEmbedder
+        try:
+            from .sentence_transformer import SentenceTransformerEmbedder
 
-        return SentenceTransformerEmbedder(settings.st_model_name)
+            return SentenceTransformerEmbedder(settings.st_model_name)
+        except Exception as exc:  # torch/model not available — degrade gracefully
+            from ..logging import get_logger
+
+            get_logger(__name__).warning(
+                "sentence_transformer_unavailable_fallback_hashing", error=str(exc)
+            )
     return HashingEmbedder(dim=settings.hashing_dim)
 
 
